@@ -3,15 +3,22 @@
 # Installer for the worktree-workflow agent skill.
 #
 # Installs the skill so it is discoverable by any agent CLI that supports the
-# Agent Skills format (SKILL.md), including GitHub Copilot CLI and Claude.
+# open Agent Skills standard (SKILL.md), including GitHub Copilot CLI, Claude,
+# and OpenAI Codex.
 #
 # It keeps a single canonical clone in
 #   ~/.local/share/agent-skills/worktree-workflow
 # and symlinks it into each agent's personal skills directory, so a later
 # `git pull` (or re-running this script) updates every agent at once.
 #
+# Targets and the personal skills dir they write to:
+#   copilot -> ~/.copilot/skills
+#   claude  -> ~/.claude/skills
+#   agents  -> ~/.agents/skills   (the USER location read by Codex, and a
+#                                  generic location other agents also honor)
+#
 # Usage:
-#   ./install.sh                 # install for copilot + claude + generic agents
+#   ./install.sh                 # install for copilot + claude + agents
 #   ./install.sh copilot         # install for a specific target only
 #   ./install.sh claude agents   # install for several targets
 #   ./install.sh --copy          # copy instead of symlink
@@ -87,11 +94,11 @@ cat <<EOF
 
 Done.
 
-Activate without restarting:
-  - Copilot CLI:  /skills reload  then  /skills info worktree-workflow
-  - Claude:       restart the CLI (or /doctor) to pick up new skills
+The skill is now in your personal skills directories. Activate it:
+  - Copilot CLI:  /skills reload   then  /skills info worktree-workflow
+  - Claude:       restart the CLI (it auto-detects ~/.claude/skills)
+  - Codex:        auto-detected from ~/.agents/skills; restart Codex if it
+                  doesn't appear. List with /skills, invoke with \$worktree-workflow
 
-Codex has no SKILL.md auto-discovery. To use it there, append the skill body
-to your global Codex instructions:
-  cat "$SRC/SKILL.md" >> ~/.codex/AGENTS.md
+Source clone: $SRC  (run 'git -C "$SRC" pull' or re-run this script to update)
 EOF

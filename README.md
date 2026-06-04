@@ -16,14 +16,18 @@ The behaviour lives in [`SKILL.md`](./SKILL.md).
 
 ## Compatibility
 
-The skill uses the portable **Agent Skills** format (`SKILL.md` with YAML
-frontmatter), so the same file works across agents:
+The skill uses the portable [open Agent Skills standard](https://agentskills.io)
+(`SKILL.md` with YAML frontmatter), so the same file works across agents that
+implement it:
 
-| Agent              | Personal skills location                         | Auto-discovered? |
-| ------------------ | ------------------------------------------------ | ---------------- |
-| GitHub Copilot CLI | `~/.copilot/skills/` or `~/.agents/skills/`      | Yes              |
-| Claude             | `~/.claude/skills/` or `~/.agents/skills/`       | Yes              |
-| OpenAI Codex       | no skills mechanism — see [Codex](#codex) below  | No               |
+| Agent              | Personal skills location                    | Auto-discovered? |
+| ------------------ | ------------------------------------------- | ---------------- |
+| GitHub Copilot CLI | `~/.copilot/skills/` or `~/.agents/skills/` | Yes              |
+| Claude             | `~/.claude/skills/`                          | Yes              |
+| OpenAI Codex       | `~/.agents/skills/` (user) or repo `.agents/skills/` | Yes     |
+
+All three also discover repo-scoped skills under `.agents/skills/`, and Codex
+and Copilot follow symlinked skill folders.
 
 ## Install
 
@@ -34,8 +38,11 @@ curl -fsSL https://raw.githubusercontent.com/NEOLPAR/worktree-workflow/main/inst
 ```
 
 This clones a canonical copy to `~/.local/share/agent-skills/worktree-workflow`
-and symlinks it into the Copilot, Claude, and generic `~/.agents` skills
-directories. Re-run it (or `git pull` in that folder) to update everywhere.
+and symlinks it into the Copilot (`~/.copilot/skills`), Claude
+(`~/.claude/skills`), and shared (`~/.agents/skills`) skill directories. The
+`~/.agents/skills` link is the user-level location Codex reads, so this single
+command covers all three agents. Re-run it (or `git pull` in that folder) to
+update everywhere.
 
 Pick specific targets or copy instead of symlink:
 
@@ -58,12 +65,11 @@ Then in Copilot CLI run `/skills reload` and `/skills info worktree-workflow`.
 
 ### Codex
 
-Codex has no `SKILL.md` auto-discovery; it reads `AGENTS.md`. Append the skill
-body to your global Codex instructions:
-
-```bash
-cat ~/.local/share/agent-skills/worktree-workflow/SKILL.md >> ~/.codex/AGENTS.md
-```
+Codex reads the same `SKILL.md` standard. Place the skill at the user location
+`~/.agents/skills/worktree-workflow/` (the installer's `agents` target does
+this) or check it into a repo's `.agents/skills/`. List skills with `/skills`
+and invoke explicitly with `$worktree-workflow`. Restart Codex if a newly
+added skill doesn't appear.
 
 ## Usage
 
