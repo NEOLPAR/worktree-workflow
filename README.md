@@ -24,7 +24,7 @@ implement it:
 | ------------------ | ------------------------------------------- | ---------------- |
 | GitHub Copilot CLI | `~/.copilot/skills/` or `~/.agents/skills/` | Yes              |
 | Claude             | `~/.claude/skills/`                          | Yes              |
-| OpenAI Codex       | `~/.agents/skills/` (user) or repo `.agents/skills/` | Yes     |
+| OpenAI Codex       | `~/.codex/skills/` or `~/.agents/skills/`   | Yes     |
 
 All three also discover repo-scoped skills under `.agents/skills/`, and Codex
 and Copilot follow symlinked skill folders.
@@ -39,8 +39,9 @@ curl -fsSL https://raw.githubusercontent.com/NEOLPAR/worktree-workflow/main/inst
 
 This clones a canonical copy to `~/.local/share/agent-skills/worktree-workflow`
 and symlinks it into the Copilot (`~/.copilot/skills`), Claude
-(`~/.claude/skills`), and shared (`~/.agents/skills`) skill directories. The
-`~/.agents/skills` link is the user-level location Codex reads, so this single
+(`~/.claude/skills`), Codex
+(`~/.codex/skills`), and shared (`~/.agents/skills`) skill directories. The
+`~/.agents/skills` link is the user-level location, so this single
 command covers all three agents. Re-run it (or `git pull` in that folder) to
 update everywhere.
 
@@ -48,6 +49,7 @@ Pick specific targets or copy instead of symlink:
 
 ```bash
 bash install.sh copilot           # Copilot only
+bash install.sh codex             # Codex only
 bash install.sh claude agents     # Claude + generic ~/.agents
 bash install.sh --copy            # copy files instead of symlinking
 ```
@@ -66,7 +68,7 @@ Then in Copilot CLI run `/skills reload` and `/skills info worktree-workflow`.
 ### Codex
 
 Codex reads the same `SKILL.md` standard. Place the skill at the user location
-`~/.agents/skills/worktree-workflow/` (the installer's `agents` target does
+`~/.codex/skills/worktree-workflow/` (the installer's `agents` target does
 this) or check it into a repo's `.agents/skills/`. List skills with `/skills`
 and invoke explicitly with `$worktree-workflow`. Restart Codex if a newly
 added skill doesn't appear.
