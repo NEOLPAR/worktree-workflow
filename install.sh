@@ -14,12 +14,12 @@
 # Targets and the personal skills dir they write to:
 #   copilot -> ~/.copilot/skills
 #   claude  -> ~/.claude/skills
-#   agents  -> ~/.agents/skills   (the USER location read by Codex, and a
-#                                  generic location other agents also honor)
+#   agents  -> ~/.codex/skills  
 #
 # Usage:
 #   ./install.sh                 # install for copilot + claude + agents
 #   ./install.sh copilot         # install for a specific target only
+#   ./install.sh codex           # install for a specific target only
 #   ./install.sh claude agents   # install for several targets
 #   ./install.sh --copy          # copy instead of symlink
 #   curl -fsSL https://raw.githubusercontent.com/NEOLPAR/worktree-workflow/main/install.sh | bash
@@ -45,7 +45,7 @@ for arg in "$@"; do
 done
 # Default targets if none specified.
 if [ "${#TARGETS[@]}" -eq 0 ]; then
-  TARGETS=(copilot claude agents)
+  TARGETS=(copilot claude codex agents)
 fi
 
 # Resolve the source of the skill. When run from inside a checkout, use it;
@@ -69,6 +69,7 @@ target_dir() {
   case "$1" in
     copilot) echo "$HOME/.copilot/skills" ;;
     claude)  echo "$HOME/.claude/skills" ;;
+    codex)  echo "$HOME/.codex/skills" ;;
     agents)  echo "$HOME/.agents/skills" ;;
   esac
 }
@@ -97,7 +98,7 @@ Done.
 The skill is now in your personal skills directories. Activate it:
   - Copilot CLI:  /skills reload   then  /skills info worktree-workflow
   - Claude:       restart the CLI (it auto-detects ~/.claude/skills)
-  - Codex:        auto-detected from ~/.agents/skills; restart Codex if it
+  - Codex:        auto-detected from ~/.codex/skills; restart Codex if it
                   doesn't appear. List with /skills, invoke with \$worktree-workflow
 
 Source clone: $SRC  (run 'git -C "$SRC" pull' or re-run this script to update)
